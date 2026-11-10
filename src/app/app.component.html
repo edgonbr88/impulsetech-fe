@@ -1,0 +1,94 @@
+<div class="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-950/60 backdrop-blur px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="h-8 w-8 rounded bg-sky-500 flex items-center justify-center font-bold text-white text-lg">
+        IT
+      </div>
+      <div>
+        <h1 class="text-base font-semibold tracking-tight text-white leading-none">ImpulseTech</h1>
+        <span class="text-xs text-slate-400">Centro Operativo & CRM B2B</span>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60 text-xs">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300 font-medium">Entorno Local Activo</span>
+      </div>
+      <span class="text-xs text-slate-400 border-l border-slate-700 pl-4">v1.0.0</span>
+    </div>
+  </header>
+
+  <!-- Main Content Layout (Bento Grid Operativo) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Panel 1: Tríada de Operaciones -->
+      <section class="md:col-span-2 bg-slate-800/40 border border-slate-800 rounded-lg p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-medium text-sky-400 uppercase tracking-wider">Arquitectura Operativa</span>
+            <span class="text-xs text-slate-500">PostgreSQL 16 + FastAPI + Angular 18</span>
+          </div>
+          <h2 class="text-xl font-semibold text-white mb-2">Plataforma Híbrida de Consultoría y Tecnología</h2>
+          <p class="text-sm text-slate-400 leading-relaxed max-w-2xl">
+            Centro unificado para la gestión comercial y técnica de ImpulseTech en Venezuela:
+            acompañamiento legal-corporativo (SAREN/SAPI), automatización operativa con IA y desarrollo de software a la medida.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-slate-800/80">
+          <div class="bg-slate-900/60 p-4 rounded border border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Pilar 1</span>
+            <span class="text-sm font-semibold text-slate-200">Legal-Tech & SAREN</span>
+          </div>
+          <div class="bg-slate-900/60 p-4 rounded border border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Pilar 2</span>
+            <span class="text-sm font-semibold text-sky-300">Automatizaciones & IA</span>
+          </div>
+          <div class="bg-slate-900/60 p-4 rounded border border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Pilar 3</span>
+            <span class="text-sm font-semibold text-violet-300">Software a la Medida</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Estado del Stack Local -->
+      <section class="bg-slate-800/40 border border-slate-800 rounded-lg p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-medium text-emerald-400 uppercase tracking-wider">Healthcheck</span>
+            <span class="text-xs text-slate-500">Docker Compose</span>
+          </div>
+          <h3 class="text-base font-medium text-white mb-3">Servicios Orquestados</h3>
+          <ul class="space-y-3 text-xs">
+            <li class="flex items-center justify-between p-2.5 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-300">Backend FastAPI</span>
+              <span class="text-emerald-400 font-medium">Puerto 8000</span>
+            </li>
+            <li class="flex items-center justify-between p-2.5 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-300">Frontend Angular</span>
+              <span class="text-emerald-400 font-medium">Puerto 4200</span>
+            </li>
+            <li class="flex items-center justify-between p-2.5 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-300">PostgreSQL 16</span>
+              <span class="text-emerald-400 font-medium">Puerto 5432</span>
+            </li>
+            <li class="flex items-center justify-between p-2.5 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-300">dbmate Migrations</span>
+              <span class="text-sky-400 font-medium">Ready</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 text-center">
+          Tarea activa: [IT-01] Setup de Entorno
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Router Outlet para futuras vistas -->
+  <router-outlet></router-outlet>
+</div>
