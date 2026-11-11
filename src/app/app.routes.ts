@@ -29,6 +29,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'leads',
+        loadComponent: () =>
+          import('./modules/leads/lead-list/lead-list.component').then(
+            (m) => m.LeadListComponent
+          ),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
