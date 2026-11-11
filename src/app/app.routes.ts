@@ -43,6 +43,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'payments',
+        loadComponent: () =>
+          import('./modules/payments/payment-list/payment-list.component').then(
+            (m) => m.PaymentListComponent
+          ),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
