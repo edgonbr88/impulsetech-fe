@@ -1,0 +1,85 @@
+<div class="max-w-6xl mx-auto space-y-8">
+  <!-- Welcome Banner -->
+  <div class="bg-gradient-to-r from-slate-900 to-slate-800/80 border border-slate-800 rounded-xl p-8 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-2">
+          <span>Bienvenido a la Operación</span>
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">
+          Hola, {{ authService.currentUser()?.nombre }}
+        </h2>
+        <p class="text-sm text-slate-400 mt-1 max-w-xl">
+          Consola central de gestión comercial, legal y tecnológica de ImpulseTech. Desde aquí coordinas leads, ejecutas servicios y monitoreas la cobranza multimoneda.
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3 shrink-0">
+        <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 text-right">
+          <span class="text-xs text-slate-500 block">Rol en Plataforma</span>
+          <span class="text-sm font-semibold text-white">{{ authService.currentUser()?.rol }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bento Grid de Módulos Operativos -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Card 1: Clientes y Cartera -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="h-10 w-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <h3 class="text-base font-semibold text-white">Directorio de Clientes</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Ficha 360° por cliente, asignación de ejecutivo responsable único e historial de servicios activos.
+        </p>
+      </div>
+      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+        <span class="text-slate-500">Próxima Fase</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-sky-400 font-mono">IT-05 / IT-06</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Embudos de Venta -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="h-10 w-10 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3 class="text-base font-semibold text-white">Pipelines de Leads</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          3 embudos independientes: Trámites SAREN, Automatización IA y Desarrollo de Software a la Medida.
+        </p>
+      </div>
+      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+        <span class="text-slate-500">Próxima Fase</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-violet-400 font-mono">IT-07 / IT-08</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Cobranzas y Finanzas -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-base font-semibold text-white">Control Multimoneda</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Seguimiento de cuentas por cobrar en USD, VES a tasa BCV y USDT. Alertas de cortes de retainers.
+        </p>
+      </div>
+      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+        <span class="text-slate-500">Próxima Fase</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-emerald-400 font-mono">IT-10</span>
+      </div>
+    </div>
+  </div>
+</div>
