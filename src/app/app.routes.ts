@@ -36,6 +36,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'services',
+        loadComponent: () =>
+          import('./modules/services/service-list/service-list.component').then(
+            (m) => m.ServiceListComponent
+          ),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
