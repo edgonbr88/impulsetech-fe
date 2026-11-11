@@ -1,84 +1,272 @@
-<div class="max-w-6xl mx-auto space-y-8">
-  <!-- Welcome Banner -->
-  <div class="bg-gradient-to-r from-slate-900 to-slate-800/80 border border-slate-800 rounded-xl p-8 shadow-sm">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div>
-        <div class="inline-flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-2">
-          <span>Bienvenido a la Operación</span>
-        </div>
-        <h2 class="text-2xl font-bold text-white tracking-tight">
-          Hola, {{ authService.currentUser()?.nombre }}
-        </h2>
-        <p class="text-sm text-slate-400 mt-1 max-w-xl">
-          Consola central de gestión comercial, legal y tecnológica de ImpulseTech. Desde aquí coordinas leads, ejecutas servicios y monitoreas la cobranza multimoneda.
-        </p>
-      </div>
-
-      <div class="flex items-center space-x-3 shrink-0">
-        <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 text-right">
-          <span class="text-xs text-slate-500 block">Rol en Plataforma</span>
-          <span class="text-sm font-semibold text-white">{{ authService.currentUser()?.rol }}</span>
-        </div>
-      </div>
+<div class="space-y-6">
+  <!-- Cabecera Ejecutiva -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2 border-b border-slate-200">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Gerencial y Operativo</h1>
+      <p class="text-sm text-slate-500 mt-1">
+        Visión 360° de adquisición comercial, retención de cartera, ejecución operativa y flujo de caja en Venezuela.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button
+        (click)="loadMetrics()"
+        class="inline-flex items-center px-3 py-2 border border-slate-200 shadow-sm text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-colors"
+      >
+        <svg class="w-3.5 h-3.5 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Actualizar Datos
+      </button>
     </div>
   </div>
 
-  <!-- Bento Grid de Módulos Operativos -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Card 1: Clientes y Cartera -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
-      <div>
-        <div class="h-10 w-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 mb-4">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
+  <!-- Loading / Error -->
+  <div *ngIf="loading && !metrics" class="p-8 text-center text-slate-500 text-sm">
+    Cargando métricas consolidadas del sistema...
+  </div>
+  <div *ngIf="errorMsg" class="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm rounded-lg flex items-center justify-between">
+    <span>{{ errorMsg }}</span>
+    <button (click)="errorMsg = ''" class="text-rose-500 hover:text-rose-700">&times;</button>
+  </div>
+
+  <!-- Contenido Principal -->
+  <div *ngIf="metrics" class="space-y-6">
+    <!-- Grid 1: KPIs Ejecutivos Principales -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- KPI 1: Pipeline Comercial -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Pipeline Activo</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">Leads</span>
         </div>
-        <h3 class="text-base font-semibold text-white">Directorio de Clientes</h3>
-        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-          Ficha 360° por cliente, asignación de ejecutivo responsable único e historial de servicios activos.
-        </p>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold text-slate-900">\${{ metrics.leads.valor_pipeline_usd | number:'1.2-2' }}</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>{{ metrics.leads.total_leads }} prospectos en embudos</span>
+          <span class="font-semibold text-emerald-600">{{ metrics.leads.tasa_conversion }}% conv.</span>
+        </div>
       </div>
-      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-        <span class="text-slate-500">Próxima Fase</span>
-        <span class="px-2 py-0.5 rounded bg-slate-800 text-sky-400 font-mono">IT-05 / IT-06</span>
+
+      <!-- KPI 2: MRR Recurrente (Retainers) -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">MRR Recurrente</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Retainers</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold text-indigo-900">\${{ metrics.servicios.mrr_recurrente_usd | number:'1.2-2' }}</span>
+          <span class="text-xs text-slate-500">/ mes</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span>{{ metrics.servicios.retainers_activos }} contratos activos</span>
+          <span class="text-slate-600 font-medium">{{ metrics.servicios.proyectos_activos }} proyectos</span>
+        </div>
+      </div>
+
+      <!-- KPI 3: Cartera de Clientes -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Cartera de Clientes</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">360°</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold text-slate-900">{{ metrics.clientes.total_clientes }}</span>
+          <span class="text-xs font-medium text-emerald-600">({{ metrics.clientes.clientes_activos }} activos)</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span class="text-rose-600 font-medium">{{ metrics.clientes.clientes_morosos }} morosos</span>
+          <span>{{ metrics.clientes.clientes_inactivos }} inactivos</span>
+        </div>
+      </div>
+
+      <!-- KPI 4: Recaudación Verificada -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Recaudado</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Caja</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold text-emerald-700">\${{ metrics.finanzas.total_verificado_usd | number:'1.2-2' }}</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+          <span class="text-amber-600 font-medium">\${{ metrics.finanzas.total_pendiente_usd | number:'1.2-2' }} por conciliar</span>
+          <span>{{ metrics.finanzas.conteo_verificados }} pagos</span>
+        </div>
       </div>
     </div>
 
-    <!-- Card 2: Embudos de Venta -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
-      <div>
-        <div class="h-10 w-10 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-4">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
+    <!-- Grid 2: Salud Operativa y Distribución -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Embudos de Venta Especializados -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-900">Embudos de Venta Especializados</h3>
+          <a routerLink="/leads" class="text-xs font-semibold text-sky-600 hover:underline">Ver Tableros &rarr;</a>
         </div>
-        <h3 class="text-base font-semibold text-white">Pipelines de Leads</h3>
-        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-          3 embudos independientes: Trámites SAREN, Automatización IA y Desarrollo de Software a la Medida.
-        </p>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Legal SAREN &amp; Constitución</span>
+              <span class="font-bold text-slate-900">{{ metrics.leads.desglose_por_embudo['LEGAL_SAREN'] || 0 }} leads</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2">
+              <div
+                class="bg-indigo-600 h-2 rounded-full"
+                [style.width.%]="(metrics.leads.desglose_por_embudo['LEGAL_SAREN'] || 0) * 10"
+              ></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>IA &amp; Automatizaciones WhatsApp</span>
+              <span class="font-bold text-slate-900">{{ metrics.leads.desglose_por_embudo['IA_AUTOMATIZACION'] || 0 }} leads</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2">
+              <div
+                class="bg-sky-600 h-2 rounded-full"
+                [style.width.%]="(metrics.leads.desglose_por_embudo['IA_AUTOMATIZACION'] || 0) * 10"
+              ></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+              <span>Software &amp; Desarrollo a Medida</span>
+              <span class="font-bold text-slate-900">{{ metrics.leads.desglose_por_embudo['SOFTWARE_MEDIDA'] || 0 }} leads</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2">
+              <div
+                class="bg-emerald-600 h-2 rounded-full"
+                [style.width.%]="(metrics.leads.desglose_por_embudo['SOFTWARE_MEDIDA'] || 0) * 10"
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-        <span class="text-slate-500">Próxima Fase</span>
-        <span class="px-2 py-0.5 rounded bg-slate-800 text-violet-400 font-mono">IT-07 / IT-08</span>
+
+      <!-- Servicios por Tipo de Contrato -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-900">Capacidad Operativa</h3>
+          <a routerLink="/services" class="text-xs font-semibold text-sky-600 hover:underline">Ver Matriz &rarr;</a>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50">
+            <span class="text-slate-600 font-medium">Software a Medida:</span>
+            <span class="font-bold text-slate-900">{{ metrics.servicios.servicios_por_tipo['SOFTWARE_MEDIDA'] || 0 }}</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50">
+            <span class="text-slate-600 font-medium">IA / Automatización:</span>
+            <span class="font-bold text-slate-900">{{ metrics.servicios.servicios_por_tipo['IA_AUTOMATIZACION'] || 0 }}</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50">
+            <span class="text-slate-600 font-medium">Legal SAREN:</span>
+            <span class="font-bold text-slate-900">{{ metrics.servicios.servicios_por_tipo['LEGAL_SAREN'] || 0 }}</span>
+          </div>
+          <div class="flex items-center justify-between p-2 rounded bg-slate-50">
+            <span class="text-slate-600 font-medium">Retainers Mensuales:</span>
+            <span class="font-bold text-indigo-700">{{ metrics.servicios.servicios_por_tipo['RETAINER_MENSUAL'] || 0 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen Multimoneda -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-900">Cobranza Multimoneda</h3>
+          <a routerLink="/payments" class="text-xs font-semibold text-sky-600 hover:underline">Ver Caja &rarr;</a>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span class="font-medium text-slate-700">Dólares (USD):</span>
+            </div>
+            <span class="font-bold text-slate-900">
+              \${{ (metrics.finanzas.desglose_por_moneda['USD']?.total || 0) | number:'1.2-2' }}
+            </span>
+          </div>
+          <div class="p-2.5 rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+              <span class="font-medium text-slate-700">Bolívares (VES):</span>
+            </div>
+            <span class="font-bold text-slate-900">
+              Bs. {{ (metrics.finanzas.desglose_por_moneda['VES']?.total || 0) | number:'1.2-2' }}
+            </span>
+          </div>
+          <div class="p-2.5 rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span class="font-medium text-slate-700">Binance (USDT):</span>
+            </div>
+            <span class="font-bold text-slate-900">
+              {{ (metrics.finanzas.desglose_por_moneda['USDT']?.total || 0) | number:'1.2-2' }} USDT
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Card 3: Cobranzas y Finanzas -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
-      <div>
-        <div class="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+    <!-- Grid 3: Actividad Reciente y Contratos Destacados -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Últimos Pagos -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-900">Últimos Pagos Registrados</h3>
+          <a routerLink="/payments" class="text-xs font-semibold text-sky-600 hover:underline">Ver Historial &rarr;</a>
         </div>
-        <h3 class="text-base font-semibold text-white">Control Multimoneda</h3>
-        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-          Seguimiento de cuentas por cobrar en USD, VES a tasa BCV y USDT. Alertas de cortes de retainers.
-        </p>
+        <div *ngIf="metrics.ultimos_pagos.length === 0" class="text-xs text-slate-400 py-4 text-center">
+          No hay pagos recientes registrados.
+        </div>
+        <div class="divide-y divide-slate-100">
+          <div *ngFor="let p of metrics.ultimos_pagos" class="py-2.5 flex items-center justify-between text-xs">
+            <div>
+              <div class="font-semibold text-slate-900">{{ p.titulo }}</div>
+              <div class="text-slate-400 text-[11px]">{{ p.subtitulo }} &bull; {{ p.fecha }}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-slate-800">{{ p.monto_o_tag }}</div>
+              <span
+                [ngClass]="{
+                  'text-emerald-600 bg-emerald-50': p.estado === 'VERIFICADO',
+                  'text-amber-600 bg-amber-50': p.estado === 'PENDIENTE',
+                  'text-rose-600 bg-rose-50': p.estado === 'RECHAZADO'
+                }"
+                class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold mt-0.5"
+              >
+                {{ p.estado }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-        <span class="text-slate-500">Próxima Fase</span>
-        <span class="px-2 py-0.5 rounded bg-slate-800 text-emerald-400 font-mono">IT-10</span>
+
+      <!-- Últimos Prospectos (Leads) -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-900">Leads Calificados Recientes</h3>
+          <a routerLink="/leads" class="text-xs font-semibold text-sky-600 hover:underline">Ver Embudos &rarr;</a>
+        </div>
+        <div *ngIf="metrics.ultimos_leads.length === 0" class="text-xs text-slate-400 py-4 text-center">
+          No hay prospectos recientes.
+        </div>
+        <div class="divide-y divide-slate-100">
+          <div *ngFor="let l of metrics.ultimos_leads" class="py-2.5 flex items-center justify-between text-xs">
+            <div>
+              <div class="font-semibold text-slate-900">{{ l.titulo }}</div>
+              <div class="text-slate-400 text-[11px]">{{ l.subtitulo }}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-bold text-slate-800">{{ l.monto_o_tag || 'Sin est.' }}</div>
+              <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-700 mt-0.5">
+                {{ l.estado }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
