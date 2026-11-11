@@ -1,7 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Lead, LeadCreate, LeadUpdate, LeadStageUpdate, EmbudoLead, EtapaLead } from '../models/lead.model';
+import {
+  Lead,
+  LeadCreate,
+  LeadUpdate,
+  LeadStageUpdate,
+  LeadConvertToClientRequest,
+  LeadConvertToClientResponse,
+  EmbudoLead,
+  EtapaLead,
+} from '../models/lead.model';
 import { User } from '../models/user.model';
 import { Cliente } from '../models/client.model';
 
@@ -54,6 +63,16 @@ export class LeadService {
 
   updateLeadStage(id: string, data: LeadStageUpdate): Observable<Lead> {
     return this.http.patch<Lead>(`${this.apiUrl}/${id}/stage`, data);
+  }
+
+  convertLeadToClient(
+    id: string,
+    data: LeadConvertToClientRequest
+  ): Observable<LeadConvertToClientResponse> {
+    return this.http.post<LeadConvertToClientResponse>(
+      `${this.apiUrl}/${id}/convert-to-client`,
+      data
+    );
   }
 
   deleteLead(id: string): Observable<void> {
