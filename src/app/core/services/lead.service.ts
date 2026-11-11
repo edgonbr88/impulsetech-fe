@@ -13,15 +13,16 @@ import {
 } from '../models/lead.model';
 import { User } from '../models/user.model';
 import { Cliente } from '../models/client.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeadService {
   private http = inject(HttpClient);
-  private apiUrl = '/api/v1/leads';
-  private usersUrl = '/api/v1/users/ejecutivos';
-  private clientsUrl = '/api/v1/clients';
+  private apiUrl = `${environment.apiBaseUrl}/leads`;
+  private usersUrl = `${environment.apiBaseUrl}/users/ejecutivos`;
+  private clientsUrl = `${environment.apiBaseUrl}/clients`;
 
   getLeads(params?: {
     embudo?: EmbudoLead | string;

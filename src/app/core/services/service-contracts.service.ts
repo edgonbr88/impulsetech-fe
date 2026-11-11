@@ -8,14 +8,15 @@ import {
   ServicioStatusUpdate,
 } from '../models/service.model';
 import { Cliente } from '../models/client.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceContractsService {
   private http = inject(HttpClient);
-  private apiUrl = '/api/v1/services';
-  private clientsUrl = '/api/v1/clients';
+  private apiUrl = `${environment.apiBaseUrl}/services`;
+  private clientsUrl = `${environment.apiBaseUrl}/clients`;
 
   getServices(params?: {
     cliente_id?: string;
