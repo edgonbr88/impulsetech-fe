@@ -2,6 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from '../../../core/services/client.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Cliente, ClienteCreate, EstadoCliente } from '../../../core/models/client.model';
 import { User } from '../../../core/models/user.model';
 
@@ -14,6 +15,7 @@ import { User } from '../../../core/models/user.model';
 })
 export class ClientListComponent implements OnInit {
   private clientService = inject(ClientService);
+  authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
   clients = signal<Cliente[]>([]);
@@ -21,7 +23,9 @@ export class ClientListComponent implements OnInit {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
-  // Filtros
+  // Filtros de Cartera
+  carteraFilter = signal<'TODOS' | 'MI_CARTERA'>('TODOS');
+  selectedEjecutivoFilter = '';
   searchQuery = '';
   selectedEstado = '';
 
@@ -32,15 +36,26 @@ export class ClientListComponent implements OnInit {
   formError = signal<string | null>(null);
   selectedClientForEdit = signal<Cliente | null>(null);
 
+  // Modal de Reasignación
+  isReassignModalOpen = signal<boolean>(false);
+  isReassigning = signal<boolean>(false);
+  reassignError = signal<string | null>(null);
+  reassignForm!: FormGroup;
+
   clientForm!: FormGroup;
 
   ngOnInit(): void {
-    this.initForm();
+    // Si el usuario es EJECUTIVO, por defecto mostrar Mi Cartera
+    if (!this.authService.isAdmin()) {
+      this.carteraFilter.set('MI_CARTERA');
+    }
+
+    this.initForms();
     this.loadClients();
     this.loadEjecutivos();
   }
 
-  private initForm(): void {
+  private initForms(): void {
     this.clientForm = this.fb.group({
       razon_social: ['', [Validators.required, Validators.minLength(3)]],
       rif_identificacion: ['', [Validators.required, Validators.pattern(/^[JjGgVvEePp]-?[0-9]{5,9}-?[0-9]?$/)]],
@@ -52,15 +67,24 @@ export class ClientListComponent implements OnInit {
       estado: ['ACTIVO', [Validators.required]],
       notas: ['']
     });
+
+    this.reassignForm = this.fb.group({
+      nuevo_ejecutivo_id: ['', [Validators.required]],
+      motivo: ['Transferencia de cuenta para gestión especializada', [Validators.required]]
+    });
   }
 
   loadClients(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
+    const isMiCartera = this.carteraFilter() === 'MI_CARTERA';
+
     this.clientService.getClients({
-      search: this.searchQuery,
-      estado: this.selectedEstado || undefined
+      search: this.searchQuery || undefined,
+      estado: this.selectedEstado || undefined,
+      ejecutivo_id: !isMiCartera && this.selectedEjecutivoFilter ? this.selectedEjecutivoFilter : undefined,
+      solo_mi_cartera: isMiCartera
     }).subscribe({
       next: (data) => {
         this.clients.set(data);
@@ -79,9 +103,17 @@ export class ClientListComponent implements OnInit {
         this.ejecutivos.set(users);
       },
       error: () => {
-        // En caso de que no tenga permisos o falle, se mantiene lista vacía
+        // Silencioso o mantener vacío
       }
     });
+  }
+
+  setCarteraFilter(filter: 'TODOS' | 'MI_CARTERA'): void {
+    this.carteraFilter.set(filter);
+    if (filter === 'MI_CARTERA') {
+      this.selectedEjecutivoFilter = '';
+    }
+    this.loadClients();
   }
 
   onFilterChange(): void {
@@ -91,9 +123,13 @@ export class ClientListComponent implements OnInit {
   openCreateModal(): void {
     this.selectedClientForEdit.set(null);
     this.formError.set(null);
+    const defaultEjecutivo = this.ejecutivos().length > 0
+      ? (this.authService.currentUser()?.id || this.ejecutivos()[0].id)
+      : '';
+
     this.clientForm.reset({
       estado: 'ACTIVO',
-      ejecutivo_id: this.ejecutivos().length > 0 ? this.ejecutivos()[0].id : ''
+      ejecutivo_id: defaultEjecutivo
     });
     this.isModalOpen.set(true);
   }
@@ -173,6 +209,47 @@ export class ClientListComponent implements OnInit {
         }
       });
     }
+  }
+
+  openReassignModal(cliente: Cliente): void {
+    this.activeDetailClient.set(cliente);
+    this.reassignError.set(null);
+    this.reassignForm.reset({
+      nuevo_ejecutivo_id: '',
+      motivo: 'Transferencia de cuenta para balance de cartera y atención prioritaria'
+    });
+    this.isReassignModalOpen.set(true);
+  }
+
+  closeReassignModal(): void {
+    this.isReassignModalOpen.set(false);
+    this.reassignError.set(null);
+  }
+
+  submitReassignment(): void {
+    if (this.reassignForm.invalid || !this.activeDetailClient()) {
+      this.reassignForm.markAllAsTouched();
+      return;
+    }
+
+    this.isReassigning.set(true);
+    this.reassignError.set(null);
+
+    const clienteId = this.activeDetailClient()!.id;
+    const { nuevo_ejecutivo_id, motivo } = this.reassignForm.value;
+
+    this.clientService.reassignClient(clienteId, { nuevo_ejecutivo_id, motivo }).subscribe({
+      next: (updated) => {
+        this.isReassigning.set(false);
+        this.activeDetailClient.set(updated);
+        this.closeReassignModal();
+        this.loadClients();
+      },
+      error: (err) => {
+        this.reassignError.set(err?.error?.detail || 'Error al reasignar el cliente.');
+        this.isReassigning.set(false);
+      }
+    });
   }
 
   openDetailDrawer(cliente: Cliente): void {

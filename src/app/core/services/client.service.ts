@@ -4,15 +4,25 @@ import { Observable } from 'rxjs';
 import { Cliente, ClienteCreate, ClienteUpdate } from '../models/client.model';
 import { User } from '../models/user.model';
 
+export interface ClienteReassignRequest {
+  nuevo_ejecutivo_id: string;
+  motivo?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
   private http = inject(HttpClient);
   private apiUrl = '/api/v1/clients';
-  private usersUrl = '/api/v1/users';
+  private usersUrl = '/api/v1/users/ejecutivos';
 
-  getClients(params?: { search?: string; estado?: string; ejecutivo_id?: string }): Observable<Cliente[]> {
+  getClients(params?: {
+    search?: string;
+    estado?: string;
+    ejecutivo_id?: string;
+    solo_mi_cartera?: boolean;
+  }): Observable<Cliente[]> {
     let httpParams = new HttpParams();
     if (params?.search) {
       httpParams = httpParams.set('search', params.search);
@@ -22,6 +32,9 @@ export class ClientService {
     }
     if (params?.ejecutivo_id) {
       httpParams = httpParams.set('ejecutivo_id', params.ejecutivo_id);
+    }
+    if (params?.solo_mi_cartera) {
+      httpParams = httpParams.set('solo_mi_cartera', 'true');
     }
     return this.http.get<Cliente[]>(this.apiUrl, { params: httpParams });
   }
@@ -36,6 +49,10 @@ export class ClientService {
 
   updateClient(id: string, data: ClienteUpdate): Observable<Cliente> {
     return this.http.put<Cliente>(`${this.apiUrl}/${id}`, data);
+  }
+
+  reassignClient(id: string, data: ClienteReassignRequest): Observable<Cliente> {
+    return this.http.patch<Cliente>(`${this.apiUrl}/${id}/reassign`, data);
   }
 
   deleteClient(id: string): Observable<void> {
