@@ -22,6 +22,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'clients',
+        loadComponent: () =>
+          import('./modules/clients/client-list/client-list.component').then(
+            (m) => m.ClientListComponent
+          ),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
