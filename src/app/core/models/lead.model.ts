@@ -55,3 +55,19 @@ export interface LeadStageUpdate {
   etapa: EtapaLead;
   motivo_perdida?: string | null;
 }
+
+export interface LeadConvertToClientRequest {
+  rif_identificacion: string;
+  razon_social?: string;
+  direccion_ciudad?: string;
+  notas_adicionales?: string;
+}
+
+export interface LeadConvertToClientResponse {
+  lead_id: string;
+  cliente_id: string;
+  razon_social: string;
+  rif_identificacion: string;
+  message: string;
+}
+
