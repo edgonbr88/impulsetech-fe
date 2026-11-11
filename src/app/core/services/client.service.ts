@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cliente, ClienteCreate, ClienteUpdate } from '../models/client.model';
 import { User } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 export interface ClienteReassignRequest {
   nuevo_ejecutivo_id: string;
@@ -14,8 +15,8 @@ export interface ClienteReassignRequest {
 })
 export class ClientService {
   private http = inject(HttpClient);
-  private apiUrl = '/api/v1/clients';
-  private usersUrl = '/api/v1/users/ejecutivos';
+  private apiUrl = `${environment.apiBaseUrl}/clients`;
+  private usersUrl = `${environment.apiBaseUrl}/users/ejecutivos`;
 
   getClients(params?: {
     search?: string;

@@ -9,13 +9,14 @@ import {
   MonedaPago,
   EstadoPago
 } from '../models/payment.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/v1/payments';
+  private apiUrl = `${environment.apiBaseUrl}/payments`;
 
   getPayments(filters?: {
     cliente_id?: string;
